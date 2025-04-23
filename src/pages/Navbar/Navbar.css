@@ -1,0 +1,21 @@
+.navbar {
+    background-color: #20232a;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .navbar button {
+    background-color: #61dafb;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .navbar button:hover {
+    background-color: #21a1f1;
+  }
