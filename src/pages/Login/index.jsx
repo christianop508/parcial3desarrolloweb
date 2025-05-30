@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Navbar from '../Navbar';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -13,21 +13,23 @@ function Login() {
     }
   }, []);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (username === 'usuario' && password === 'contraseña') {
-      setIsLoggedIn(true);
-      localStorage.setItem('isLoggedIn', 'true');
-    } else {
-      alert('Credenciales incorrectas');
-    }
-  };
+  const navigate = useNavigate();
+
+const handleLogin = (e) => {
+  e.preventDefault();
+  if (username === 'usuario' && password === 'contraseña') {
+    setIsLoggedIn(true);
+    localStorage.setItem('isLoggedIn', 'true');
+    navigate('/JuegosPendientes'); // Redirige tras login
+  } else {
+    alert('Credenciales incorrectas');
+  }
+};
 
   // 👇 Separar estilos del login vs. app logueada
   if (isLoggedIn) {
     return (
       <div className="min-h-screen bg-gray-900 text-white">
-        <Navbar />
         <div className="p-8 text-center">
           <h2 className="text-2xl font-bold mb-2">Bienvenido, {username || 'usuario'} 🎉</h2>
           <p className="text-gray-400">Selecciona una sección del menú superior</p>

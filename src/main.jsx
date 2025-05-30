@@ -1,11 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import './assets/index.css';
 import Login from './pages/Login';
 import JuegosPendientes from './pages/JuegosPendientes';
-import GameDetail from './detail/gamedetail'; // ✅ Nuevo import
+import GameDetail from './detail/gamedetail';
 import GameDetail2 from './detail/juegosjugadosdetalle';
 import GameDetail3 from './detail/PeliculaDetalle';
 import GameDetail4 from './detail/PeliculaVistaDetalle';
@@ -28,16 +28,27 @@ import Navbar from './pages/Navbar';
 import PeliculaDetalle from './detail/PeliculaDetalle';
 import PeliculaVistaDetalle from './detail/PeliculaVistaDetalle';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Navbar /> {/* Barra de navegación siempre visible */}
+import { useEffect } from 'react';
+
+function App() {
+  const location = useLocation();
+  const hideNavbarOnPaths = ['/']; // Aquí defines en qué rutas ocultar el Navbar
+
+  const showNavbar = !hideNavbarOnPaths.includes(location.pathname);
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // para asegurar scroll arriba al cambiar de ruta (opcional)
+  }, [location.pathname]);
+
+  return (
+    <>
+      {showNavbar && <Navbar />}
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/JuegosPendientes" element={<JuegosPendientes />} />
-        <Route path="/juegos/:gameId" element={<GameDetail />} /> {/* ✅ Nueva ruta */}
-        <Route path="/juegoscompletados/:gameId" element={<GameDetail2 />} /> {/* ✅ Nueva ruta */}
-        <Route path="/peliculaspendientes/:gameId" element={<GameDetail3 />} /> {/* ✅ Nueva ruta */}
+        <Route path="/juegos/:gameId" element={<GameDetail />} />
+        <Route path="/juegoscompletados/:gameId" element={<GameDetail2 />} />
+        <Route path="/peliculaspendientes/:gameId" element={<GameDetail3 />} />
         <Route path="/peliculasvistas/:gameId" element={<GameDetail4 />} />
         <Route path="/seriespendientes/:gameId" element={<GameDetail5 />} />
         <Route path="/seriesvistas/:gameId" element={<GameDetail6 />} />
@@ -55,9 +66,16 @@ createRoot(document.getElementById('root')).render(
         <Route path="/MangasPendientes" element={<MangasPendientes />} />
         <Route path="/MangasVistos" element={<MangasVistos />} />
         <Route path="/peliculas/:id" element={<PeliculaDetalle />} />
-        <Route path="/PeliculasVistas" element={<PeliculasVistas />} />
         <Route path="/peliculas-vistas/:id" element={<PeliculaVistaDetalle />} />
       </Routes>
+    </>
+  );
+}
+
+createRoot(document.getElementById('root')).render(
+  <StrictMode>
+    <BrowserRouter>
+      <App />
     </BrowserRouter>
   </StrictMode>
 );
