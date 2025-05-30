@@ -19,17 +19,11 @@ function Navbar() {
             Juegos
           </button>
           <div className="absolute top-full left-0 w-40 bg-gray-700 rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-opacity duration-200 z-10">
-            <button
-              onClick={() => navigate('/JuegosPendientes')}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-600"
-            >
+            <button onClick={() => navigate('/JuegosPendientes')} className="block w-full text-left px-4 py-2 hover:bg-gray-600">
               Juegos Pendientes
             </button>
-            <button
-              onClick={() => alert('Juegos Vistos')}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-600"
-            >
-              Juegos Vistos
+            <button onClick={() => navigate('/JuegosCompletados')} className="block w-full text-left px-4 py-2 hover:bg-gray-600">
+              Juegos Completados
             </button>
           </div>
         </div>
@@ -40,16 +34,10 @@ function Navbar() {
             Películas
           </button>
           <div className="absolute top-full left-0 w-40 bg-gray-700 rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-opacity duration-200 z-10">
-            <button
-              onClick={() => alert('Películas Pendientes')}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-600"
-            >
+            <button onClick={() => navigate('/PeliculasPendientes')} className="block w-full text-left px-4 py-2 hover:bg-gray-600">
               Películas Pendientes
             </button>
-            <button
-              onClick={() => alert('Películas Vistas')}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-600"
-            >
+            <button onClick={() => navigate('/PeliculasVistas')} className="block w-full text-left px-4 py-2 hover:bg-gray-600">
               Películas Vistas
             </button>
           </div>
@@ -61,16 +49,10 @@ function Navbar() {
             Series
           </button>
           <div className="absolute top-full left-0 w-40 bg-gray-700 rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-opacity duration-200 z-10">
-            <button
-              onClick={() => alert('Series Pendientes')}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-600"
-            >
+            <button onClick={() => navigate('/SeriesPendientes')} className="block w-full text-left px-4 py-2 hover:bg-gray-600">
               Series Pendientes
             </button>
-            <button
-              onClick={() => alert('Series Vistas')}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-600"
-            >
+            <button onClick={() => navigate('/SeriesVistas')} className="block w-full text-left px-4 py-2 hover:bg-gray-600">
               Series Vistas
             </button>
           </div>
@@ -82,16 +64,10 @@ function Navbar() {
             Animes
           </button>
           <div className="absolute top-full left-0 w-40 bg-gray-700 rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-opacity duration-200 z-10">
-            <button
-              onClick={() => alert('Animes Pendientes')}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-600"
-            >
+            <button onClick={() => navigate('/AnimesPendientes')} className="block w-full text-left px-4 py-2 hover:bg-gray-600">
               Animes Pendientes
             </button>
-            <button
-              onClick={() => alert('Animes Vistos')}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-600"
-            >
+            <button onClick={() => navigate('/AnimesVistos')} className="block w-full text-left px-4 py-2 hover:bg-gray-600">
               Animes Vistos
             </button>
           </div>
@@ -103,16 +79,10 @@ function Navbar() {
             Mangas
           </button>
           <div className="absolute top-full left-0 w-40 bg-gray-700 rounded shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-opacity duration-200 z-10">
-            <button
-              onClick={() => alert('Mangas Pendientes')}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-600"
-            >
+            <button onClick={() => navigate('/MangasPendientes')} className="block w-full text-left px-4 py-2 hover:bg-gray-600">
               Mangas Pendientes
             </button>
-            <button
-              onClick={() => alert('Mangas Vistos')}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-600"
-            >
+            <button onClick={() => navigate('/MangasVistos')} className="block w-full text-left px-4 py-2 hover:bg-gray-600">
               Mangas Vistos
             </button>
           </div>

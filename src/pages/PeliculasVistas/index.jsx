@@ -1,18 +1,18 @@
 import { Link } from 'react-router-dom';
-import games from '../../data/gamesdata';
+import peliculas from '../../data/peliculasvistasdata';
 
-export default function JuegosPendientes() {
+export default function PeliculasVistas() {
   return (
     <div className="p-6 bg-gray-800 text-white min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Juegos Pendientes</h1>
+      <h1 className="text-3xl font-bold mb-6">Películas Vistas</h1>
       <ul className="space-y-4">
-        {games.map((game) => (
-          <li key={game.id}>
+        {peliculas.map((pelicula) => (
+          <li key={pelicula.id}>
             <Link
-              to={`/juegos/${game.id}`}
+              to={`/peliculasvistas/${pelicula.id}`}
               className="block p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition"
             >
-              {game.title}
+              {pelicula.title}
             </Link>
           </li>
         ))}
