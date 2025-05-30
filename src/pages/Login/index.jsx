@@ -28,15 +28,26 @@ const handleLogin = (e) => {
 
   // 👇 Separar estilos del login vs. app logueada
   if (isLoggedIn) {
-    return (
-      <div className="min-h-screen bg-gray-900 text-white">
-        <div className="p-8 text-center">
-          <h2 className="text-2xl font-bold mb-2">Bienvenido, {username || 'usuario'} 🎉</h2>
-          <p className="text-gray-400">Selecciona una sección del menú superior</p>
-        </div>
+  return (
+    <div className="min-h-screen bg-gray-900 text-white">
+      <div className="p-8 text-center">
+        <h2 className="text-2xl font-bold mb-2">Bienvenido, {username || 'usuario'} 🎉</h2>
+        <p className="text-gray-400">Selecciona una sección del menú superior</p>
+
+        {/* Botón de cierre de sesión */}
+        <button
+          onClick={() => {
+            localStorage.removeItem('isLoggedIn');
+            setIsLoggedIn(false);
+          }}
+          className="mt-4 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded transition"
+        >
+          Cerrar sesión
+        </button>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">
