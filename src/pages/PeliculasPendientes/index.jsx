@@ -1,22 +1,80 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
-import peliculas from '../../data/peliculasdata';
 
-export default function JuegosPendientes() {
+function PeliculasPendientes() {
+  const [peliculas, setPeliculas] = useState([]);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  useEffect(() => {
+    fetchPeliculas();
+  }, []);
+
+  const fetchPeliculas = async () => {
+    const res = await axios.get('http://localhost:3001/api/peliculasPendientes');
+    setPeliculas(res.data);
+  };
+
+  const handleAdd = async () => {
+    if (!title || !description) return alert('Completa todos los campos');
+    await axios.post('http://localhost:3001/api/peliculasPendientes', { title, description });
+    setTitle('');
+    setDescription('');
+    fetchPeliculas();
+  };
+
+  const handleDelete = async (id) => {
+    await axios.delete(`http://localhost:3001/api/peliculasPendientes/${id}`);
+    fetchPeliculas();
+  };
+
   return (
-    <div className="p-6 bg-gray-800 text-white min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Peliculas Pendientes</h1>
-      <ul className="space-y-4">
-        {peliculas.map((game) => (
-          <li key={game.id}>
-            <Link
-              to={`/peliculaspendientes/${game.id}`}
-              className="block p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition"
-            >
-              {game.title}
+    <div className="p-6 text-white min-h-screen bg-gray-900">
+      <h1 className="text-2xl font-bold mb-4">Películas Pendientes</h1>
+
+      <div className="mb-4 space-y-2">
+        <input
+          type="text"
+          placeholder="Título"
+          className="px-4 py-2 rounded bg-gray-800 text-white w-full"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <textarea
+          placeholder="Descripción"
+          className="px-4 py-2 rounded bg-gray-800 text-white w-full"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <button
+          onClick={handleAdd}
+          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          Agregar Película
+        </button>
+      </div>
+
+      <ul className="space-y-2">
+        {peliculas.map((pelicula) => (
+          <li
+            key={pelicula.id}
+            className="bg-gray-800 p-4 rounded flex justify-between items-center"
+          >
+            <Link to={`/peliculaspendientes/${pelicula.id}`} className="text-blue-400 hover:underline">
+              {pelicula.title}
             </Link>
+            <button
+              onClick={() => handleDelete(pelicula.id)}
+              className="text-red-500 hover:text-red-700 ml-4"
+            >
+              Eliminar
+            </button>
           </li>
         ))}
       </ul>
     </div>
   );
 }
+
+export default PeliculasPendientes;

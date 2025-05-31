@@ -58,3 +58,41 @@ app.delete('/api/juegos-completados/:id', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
+const peliculasPendientes = require('./data/peliculaspendientes');
+
+// Obtener todas las películas pendientes
+app.get('/api/peliculasPendientes', (req, res) => {
+  res.json(peliculasPendientes);
+});
+
+// Agregar una nueva película pendiente
+app.post('/api/peliculasPendientes', (req, res) => {
+  const { title, description } = req.body;
+
+  if (!title || !description) {
+    return res.status(400).json({ error: 'Título y descripción son requeridos' });
+  }
+
+  const newPelicula = {
+    id: peliculasPendientes.length + 1,
+    title,
+    description,
+  };
+
+  peliculasPendientes.push(newPelicula);
+  res.status(201).json(newPelicula);
+});
+
+// Eliminar película pendiente
+app.delete('/api/peliculasPendientes/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = peliculasPendientes.findIndex((p) => p.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Película no encontrada' });
+  }
+
+  peliculasPendientes.splice(index, 1);
+  res.status(204).send();
+});
