@@ -1,62 +1,90 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-export default function JuegosPendientes() {
-  const [games, setGames] = useState([]);
-  const [newTitle, setNewTitle] = useState('');
+function JuegosPendientes() {
+  const [juegos, setJuegos] = useState([]);
+  const [nuevoJuego, setNuevoJuego] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const navigate = useNavigate();
+
+  const fetchJuegos = async () => {
+    const response = await axios.get('http://localhost:3001/api/juegos');
+    setJuegos(response.data);
+  };
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/juegos')
-      .then((res) => res.json())
-      .then((data) => setGames(data));
+    fetchJuegos();
   }, []);
 
-  const handleAddGame = async (e) => {
-    e.preventDefault();
-    if (!newTitle.trim()) return;
+  const agregarJuego = async () => {
+    if (!nuevoJuego.trim()) return;
 
-    const response = await fetch('http://localhost:3001/api/juegos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: newTitle }),
+    await axios.post('http://localhost:3001/api/juegos', {
+      title: nuevoJuego.trim(),
+      description: descripcion.trim(),
     });
 
-    if (response.ok) {
-      const addedGame = await response.json();
-      setGames([...games, addedGame]);
-      setNewTitle('');
-    }
+    setNuevoJuego('');
+    setDescripcion('');
+    fetchJuegos();
+  };
+
+  const eliminarJuego = async (id) => {
+    await axios.delete(`http://localhost:3001/api/juegos/${id}`);
+    fetchJuegos();
+  };
+
+  const irADetalle = (id) => {
+    navigate(`/juegos/${id}`);
   };
 
   return (
-    <div className="p-6 bg-gray-800 text-white min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Juegos Pendientes</h1>
+    <div className="min-h-screen bg-gray-900 text-white p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">🎮 Juegos Pendientes</h1>
 
-      <form onSubmit={handleAddGame} className="mb-6 flex gap-2">
+      <div className="flex flex-col items-center gap-4 mb-6">
         <input
           type="text"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-          placeholder="Nuevo juego"
-          className="p-2 rounded text-black"
+          value={nuevoJuego}
+          onChange={(e) => setNuevoJuego(e.target.value)}
+          placeholder="Nombre del juego"
+          className="px-4 py-2 rounded bg-gray-800 text-white w-80"
         />
-        <button type="submit" className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">
+        <textarea
+          value={descripcion}
+          onChange={(e) => setDescripcion(e.target.value)}
+          placeholder="Descripción"
+          className="px-4 py-2 rounded bg-gray-800 text-white w-80 h-24 resize-none"
+        />
+        <button
+          onClick={agregarJuego}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded"
+        >
           Agregar
         </button>
-      </form>
+      </div>
 
-      <ul className="space-y-4">
-        {games.map((game) => (
-          <li key={game.id}>
-            <Link
-              to={`/juegos/${game.id}`}
-              className="block p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition"
+      <ul className="max-w-md mx-auto space-y-4">
+        {juegos.map((juego) => (
+          <li
+            key={juego.id}
+            className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-700 transition"
+          >
+            <span onClick={() => irADetalle(juego.id)} className="text-lg hover:underline">
+              {juego.title}
+            </span>
+            <button
+              onClick={() => eliminarJuego(juego.id)}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
             >
-              {game.title}
-            </Link>
+              Eliminar
+            </button>
           </li>
         ))}
       </ul>
     </div>
   );
 }
+
+export default JuegosPendientes;

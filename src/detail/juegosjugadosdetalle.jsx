@@ -1,20 +1,37 @@
-import { useParams, Link } from 'react-router-dom';
-import juegosjugados from '../data/juegosjugadosdata';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-export default function GameDetail2() {
+function GameDetail2() {
   const { gameId } = useParams();
-  const game = juegosjugados.find(g => g.id === gameId);
+  const navigate = useNavigate();
+  const [game, setGame] = useState(null);
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/juegos-completados')
+      .then(res => {
+        const selected = res.data.find(g => g.id === parseInt(gameId));
+        setGame(selected);
+      })
+      .catch(err => console.error(err));
+  }, [gameId]);
 
   if (!game) {
-    return <div className="p-6 text-red-500">Juego no encontrado.</div>;
+    return <p className="text-white p-8">Cargando...</p>;
   }
 
   return (
-    <div className="p-6 text-white bg-gray-900 min-h-screen">
+    <div className="min-h-screen bg-gray-900 text-white p-8">
       <h2 className="text-3xl font-bold mb-4">{game.title}</h2>
-      <img src={game.image} alt={game.title} className="w-64 rounded-lg shadow-lg mb-4" />
-      <p className="text-lg mb-6">{game.description}</p>
-      <Link to="/juegoscompletados" className="text-blue-400 hover:underline">← Volver a la lista</Link>
+      <p className="text-gray-300 mb-8">{game.description}</p>
+      <button
+        onClick={() => navigate(-1)}
+        className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
+      >
+        Volver
+      </button>
     </div>
   );
 }
+
+export default GameDetail2;
