@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const games = require('./data/games');
-const completedGames = require('./data/gamesCompleted'); // ✅ NUEVO
+const completedGames = require('./data/gamescompleted'); // ✅ NUEVO
 
 const app = express();
 const PORT = 3001;
@@ -30,6 +30,15 @@ app.delete('/api/juegos/:id', (req, res) => {
     return res.status(204).end();
   }
   res.status(404).json({ error: 'Juego no encontrado' });
+});
+
+app.get('/api/juegos/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const juego = games.find(j => j.id === id);
+  if (!juego) {
+    return res.status(404).json({ error: 'Juego no encontrado' });
+  }
+  res.json(juego);
 });
 
 // ✅ NUEVO: Juegos Completados

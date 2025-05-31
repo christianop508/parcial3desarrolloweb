@@ -1,72 +1,82 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
 function JuegosPendientes() {
-  const [games, setPeliculas] = useState([]);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [juegos, setJuegos] = useState([]);
+  const [nuevoJuego, setNuevoJuego] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const navigate = useNavigate();
+
+  const fetchJuegos = async () => {
+    const response = await axios.get('http://localhost:3001/api/juegos');
+    setJuegos(response.data);
+  };
 
   useEffect(() => {
-    fetchPeliculas();
+    fetchJuegos();
   }, []);
 
-  const fetchPeliculas = async () => {
-    const res = await axios.get('http://localhost:3001/api/peliculasPendientes');
-    setPeliculas(res.data);
+  const agregarJuego = async () => {
+    if (!nuevoJuego.trim()) return;
+
+    await axios.post('http://localhost:3001/api/juegos', {
+      title: nuevoJuego.trim(),
+      description: descripcion.trim(),
+    });
+
+    setNuevoJuego('');
+    setDescripcion('');
+    fetchJuegos();
   };
 
-  const handleAdd = async () => {
-    if (!title || !description) return alert('Completa todos los campos');
-    await axios.post('http://localhost:3001/api/peliculasPendientes', { title, description });
-    setTitle('');
-    setDescription('');
-    fetchPeliculas();
+  const eliminarJuego = async (id) => {
+    await axios.delete(`http://localhost:3001/api/juegos/${id}`);
+    fetchJuegos();
   };
 
-  const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:3001/api/peliculasPendientes/${id}`);
-    fetchPeliculas();
+  const irADetalle = (id) => {
+    navigate(`/juegos/${id}`);
   };
 
   return (
-    <div className="p-6 text-white min-h-screen bg-gray-900">
-      <h1 className="text-2xl font-bold mb-4">Juegos Pendientes</h1>
+    <div className="min-h-screen bg-gray-900 text-white p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">🎮 Juegos Pendientes</h1>
 
-      <div className="mb-4 space-y-2">
+      <div className="flex flex-col items-center gap-4 mb-6">
         <input
           type="text"
-          placeholder="Título"
-          className="px-4 py-2 rounded bg-gray-800 text-white w-full"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={nuevoJuego}
+          onChange={(e) => setNuevoJuego(e.target.value)}
+          placeholder="Nombre del juego"
+          className="px-4 py-2 rounded bg-gray-800 text-white w-80"
         />
         <textarea
+          value={descripcion}
+          onChange={(e) => setDescripcion(e.target.value)}
           placeholder="Descripción"
-          className="px-4 py-2 rounded bg-gray-800 text-white w-full"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          className="px-4 py-2 rounded bg-gray-800 text-white w-80 h-24 resize-none"
         />
         <button
-          onClick={handleAdd}
-          className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition"
+          onClick={agregarJuego}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded"
         >
-          Agregar Juego
+          Agregar
         </button>
       </div>
 
-      <ul className="space-y-2">
-        {games.map((pelicula) => (
+      <ul className="max-w-md mx-auto space-y-4">
+        {juegos.map((juego) => (
           <li
-            key={pelicula.id}
-            className="bg-gray-800 p-4 rounded flex justify-between items-center"
+            key={juego.id}
+            className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-700 transition"
           >
-            <Link to={`/juegospendientes/${pelicula.id}`} className="text-blue-400 hover:underline">
-              {pelicula.title}
-            </Link>
+            <span onClick={() => irADetalle(juego.id)} className="text-lg hover:underline">
+              {juego.title}
+            </span>
             <button
-              onClick={() => handleDelete(pelicula.id)}
-              className="text-red-500 hover:text-red-700 ml-4"
+              onClick={() => eliminarJuego(juego.id)}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
             >
               Eliminar
             </button>
