@@ -67,6 +67,7 @@ function App() {
         <Route path="/MangasVistos" element={<MangasVistos />} />
         <Route path="/peliculas/:id" element={<PeliculaDetalle />} />
         <Route path="/peliculas-vistas/:id" element={<PeliculaVistaDetalle />} />
+        <Route path="/peliculasvistas/:gameId" element={<PeliculaVistaDetalle />} />
       </Routes>
     </>
   );
