@@ -52,7 +52,7 @@ function App() {
         <Route path="/peliculasvistas/:gameId" element={<GameDetail4 />} />
         <Route path="/seriespendientes/:gameId" element={<GameDetail5 />} />
         <Route path="/seriesvistas/:gameId" element={<GameDetail6 />} />
-        <Route path="/animespendientes/:gameId" element={<GameDetail7 />} />
+        <Route path="/animespendientes/:animeId" element={<GameDetail7 />} />
         <Route path="/animesvistos/:gameId" element={<GameDetail8 />} />
         <Route path="/mangaspendientes/:gameId" element={<GameDetail9 />} />
         <Route path="/mangasvistos/:gameId" element={<GameDetail10 />} />

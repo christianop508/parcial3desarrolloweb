@@ -5,6 +5,7 @@ const completedGames = require('./data/gamescompleted');
 const peliculasVistas = require('./data/peliculasvistas');
 const seriesPendientes = require('./data/series');
 const seriesVistas = require('./data/seriesVistas');
+const animes = require('./data/animes');
 
 const app = express();
 const PORT = 3001;
@@ -206,4 +207,28 @@ app.delete('/api/series-vistas/:id', (req, res) => {
     return res.status(204).end();
   }
   res.status(404).json({ error: 'Serie no encontrada' });
+});
+
+app.get('/api/animes', (req, res) => {
+  res.json(animes);
+});
+
+app.post('/api/animes', (req, res) => {
+  const { title, description } = req.body;
+  if (!title || !description) {
+    return res.status(400).json({ error: 'Título y descripción son requeridos' });
+  }
+  const newAnime = { id: animes.length + 1, title, description };
+  animes.push(newAnime);
+  res.status(201).json(newAnime);
+});
+
+app.delete('/api/animes/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = animes.findIndex(anime => anime.id === id);
+  if (index !== -1) {
+    animes.splice(index, 1);
+    return res.status(204).end();
+  }
+  res.status(404).json({ error: 'Anime no encontrado' });
 });
