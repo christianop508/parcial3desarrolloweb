@@ -6,6 +6,9 @@ const peliculasVistas = require('./data/peliculasvistas');
 const seriesPendientes = require('./data/series');
 const seriesVistas = require('./data/seriesVistas');
 const animes = require('./data/animes');
+const animesVistos = require('./data/animesvistos');
+const mangasPendientes = require('./data/mangaspendientes');
+const mangasVistos = require('./data/mangasvistos');
 
 const app = express();
 const PORT = 3001;
@@ -231,4 +234,76 @@ app.delete('/api/animes/:id', (req, res) => {
     return res.status(204).end();
   }
   res.status(404).json({ error: 'Anime no encontrado' });
+});
+
+app.get('/api/animesvistos', (req, res) => {
+  res.json(animesVistos);
+});
+
+app.post('/api/animesvistos', (req, res) => {
+  const { title, description } = req.body;
+  if (!title || !description) {
+    return res.status(400).json({ error: 'Título y descripción son requeridos' });
+  }
+  const newAnime = { id: animesVistos.length + 1, title, description };
+  animesVistos.push(newAnime);
+  res.status(201).json(newAnime);
+});
+
+app.delete('/api/animesvistos/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = animesVistos.findIndex(anime => anime.id === id);
+  if (index !== -1) {
+    animesVistos.splice(index, 1);
+    return res.status(204).end();
+  }
+  res.status(404).json({ error: 'Anime no encontrado' });
+});
+
+app.get('/api/mangaspendientes', (req, res) => {
+  res.json(mangasPendientes);
+});
+
+app.post('/api/mangaspendientes', (req, res) => {
+  const { title, description } = req.body;
+  if (!title || !description) {
+    return res.status(400).json({ error: 'Título y descripción son requeridos' });
+  }
+  const newManga = { id: mangasPendientes.length + 1, title, description };
+  mangasPendientes.push(newManga);
+  res.status(201).json(newManga);
+});
+
+app.delete('/api/mangaspendientes/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = mangasPendientes.findIndex(manga => manga.id === id);
+  if (index !== -1) {
+    mangasPendientes.splice(index, 1);
+    return res.status(204).end();
+  }
+  res.status(404).json({ error: 'Manga no encontrado' });
+});
+
+app.get('/api/mangasvistos', (req, res) => {
+  res.json(mangasVistos);
+});
+
+app.post('/api/mangasvistos', (req, res) => {
+  const { title, description } = req.body;
+  if (!title || !description) {
+    return res.status(400).json({ error: 'Título y descripción son requeridos' });
+  }
+  const newManga = { id: mangasVistos.length + 1, title, description };
+  mangasVistos.push(newManga);
+  res.status(201).json(newManga);
+});
+
+app.delete('/api/mangasvistos/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = mangasVistos.findIndex(manga => manga.id === id);
+  if (index !== -1) {
+    mangasVistos.splice(index, 1);
+    return res.status(204).end();
+  }
+  res.status(404).json({ error: 'Manga no encontrado' });
 });

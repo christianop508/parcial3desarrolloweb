@@ -1,20 +1,35 @@
-import { useParams, Link } from 'react-router-dom';
-import animesvistos from '../data/animesvistosdata';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-export default function GameDetail8() {
+function AnimesVistosDetalle() {
   const { gameId } = useParams();
-  const game = animesvistos.find(g => g.id === gameId);
+  const [anime, setAnime] = useState(null);
+  const navigate = useNavigate();
 
-  if (!game) {
-    return <div className="p-6 text-red-500">Juego no encontrado.</div>;
-  }
+  useEffect(() => {
+    const fetchAnime = async () => {
+      const response = await axios.get(`http://localhost:3001/api/animesvistos`);
+      const found = response.data.find((a) => a.id === parseInt(gameId));
+      setAnime(found);
+    };
+    fetchAnime();
+  }, [gameId]);
+
+  if (!anime) return <div className="text-white p-4">Cargando...</div>;
 
   return (
-    <div className="p-6 text-white bg-gray-900 min-h-screen">
-      <h2 className="text-3xl font-bold mb-4">{game.title}</h2>
-      <img src={game.image} alt={game.title} className="w-64 rounded-lg shadow-lg mb-4" />
-      <p className="text-lg mb-6">{game.description}</p>
-      <Link to="/juegospendientes" className="text-blue-400 hover:underline">← Volver a la lista</Link>
+    <div className="min-h-screen bg-gray-900 text-white p-8">
+      <h2 className="text-3xl font-bold mb-4">{anime.title}</h2>
+      <p className="text-gray-300 mb-6">{anime.description || 'Sin descripción'}</p>
+      <button
+        onClick={() => navigate(-1)}
+        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+      >
+        Volver
+      </button>
     </div>
   );
 }
+
+export default AnimesVistosDetalle;

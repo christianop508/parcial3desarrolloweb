@@ -1,22 +1,90 @@
-import { Link } from 'react-router-dom';
-import animesvistos from '../../data/animesvistosdata';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-export default function JuegosPendientes() {
+function AnimesVistos() {
+  const [animes, setAnimes] = useState([]);
+  const [nuevoAnime, setNuevoAnime] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const navigate = useNavigate();
+
+  const fetchAnimes = async () => {
+    const response = await axios.get('http://localhost:3001/api/animesvistos');
+    setAnimes(response.data);
+  };
+
+  useEffect(() => {
+    fetchAnimes();
+  }, []);
+
+  const agregarAnime = async () => {
+    if (!nuevoAnime.trim()) return;
+
+    await axios.post('http://localhost:3001/api/animesvistos', {
+      title: nuevoAnime.trim(),
+      description: descripcion.trim(),
+    });
+
+    setNuevoAnime('');
+    setDescripcion('');
+    fetchAnimes();
+  };
+
+  const eliminarAnime = async (id) => {
+    await axios.delete(`http://localhost:3001/api/animesvistos/${id}`);
+    fetchAnimes();
+  };
+
+  const irADetalle = (id) => {
+    navigate(`/animesvistos/${id}`);
+  };
+
   return (
-    <div className="p-6 bg-gray-800 text-white min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Animes Vistos</h1>
-      <ul className="space-y-4">
-        {animesvistos.map((game) => (
-          <li key={game.id}>
-            <Link
-              to={`/animesvistos/${game.id}`}
-              className="block p-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition"
+    <div className="min-h-screen bg-gray-900 text-white p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">✅ Animes Vistos</h1>
+
+      <div className="flex flex-col items-center gap-4 mb-6">
+        <input
+          type="text"
+          value={nuevoAnime}
+          onChange={(e) => setNuevoAnime(e.target.value)}
+          placeholder="Nombre del anime"
+          className="px-4 py-2 rounded bg-gray-800 text-white w-80"
+        />
+        <textarea
+          value={descripcion}
+          onChange={(e) => setDescripcion(e.target.value)}
+          placeholder="Descripción"
+          className="px-4 py-2 rounded bg-gray-800 text-white w-80 h-24 resize-none"
+        />
+        <button
+          onClick={agregarAnime}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded"
+        >
+          Agregar
+        </button>
+      </div>
+
+      <ul className="max-w-md mx-auto space-y-4">
+        {animes.map((anime) => (
+          <li
+            key={anime.id}
+            className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-700 transition"
+          >
+            <span onClick={() => irADetalle(anime.id)} className="text-lg hover:underline">
+              {anime.title}
+            </span>
+            <button
+              onClick={() => eliminarAnime(anime.id)}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm"
             >
-              {game.title}
-            </Link>
+              Eliminar
+            </button>
           </li>
         ))}
       </ul>
     </div>
   );
 }
+
+export default AnimesVistos;
